@@ -1,0 +1,316 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(2, 23, 48); /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2d3748; /* color of the scroll thumb */
+  border: 1px solid rgb(255, 255, 254); /* creates padding around scroll thumb */
+}
+
+.datatable .dt-buttons {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.datatable .dt-length {
+  float: left;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.datatable .dt-length .dt-input {
+  border: 1px solid rgba(0, 0, 0, 0.432);
+  border-radius: 5px;
+  margin: 4px;
+}
+
+.dark .datatable .dt-length {
+  color: white;
+}
+
+.dark .datatable .dt-length .dt-input {
+  color: black;
+}
+
+.datatable .dt-search {
+  float: right;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.datatable .dt-search input {
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.432);
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.801);
+}
+
+.datatable .dt-info {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.datatable .dt-paging {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.datatable .dt-paging-button:not(.current):not(.first):not(.previous):not(.next):not(.last) {
+  background-color: rgb(0, 46, 99);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.datatable .dt-paging-button:not(.first):not(.previous):not(.next):not(.last):hover {
+  background-color: rgb(212, 176, 18);
+}
+
+.datatable .current{
+  background-color: rgb(212, 176, 18);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.datatable .first,
+.datatable .previous,
+.datatable .next,
+.datatable .last {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(212, 176, 18);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.datatable .dt-paging-button:hover:not(.disabled) {
+  background-color: rgb(0, 46, 99);
+  color: white;
+}
+
+.datatable .disabled {
+  background-color: #6d6f74;
+  color: white;
+  cursor: not-allowed;
+  margin: -1px;
+}
+
+@media screen and (max-width: 600px) {
+  .datatable .dt-paging .first,
+  .datatable .dt-paging .last,
+  .datatable .dt-paging .disabled {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 800px) {
+  .datatable .dt-paging .first,
+  .datatable .dt-paging .last {
+    display: none;
+  }
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
+  margin-right: 0.5em;
+  display: inline-block;
+  /* Use dark mode specific colors */
+  content: '►';
+  cursor: pointer;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr.dt-hasChild > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.dt-hasChild > th.dtr-control:before {
+  margin-right: 0.5em;
+  display: inline-block;
+  content: '▼';
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control {
+  cursor: pointer;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr.dt-hasChild {
+  background-color: rgb(212, 176, 18);
+}
+
+table.dataTable thead > tr > th.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-ordering-asc span.dt-column-order:before {
+  position: absolute;
+  display: block;
+  bottom: 50%;
+  content: '▲';
+  content: '▲'/'';
+}
+table.dataTable thead > tr > th.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-ordering-desc span.dt-column-order:after {
+  position: absolute;
+  display: block;
+  top: 60%;
+  content: '▼';
+  content: '▼'/'';
+}
+
+table.dataTable thead > tr > th.dt-orderable-asc,
+table.dataTable thead > tr > th.dt-orderable-desc,
+table.dataTable thead > tr > th.dt-ordering-asc,
+table.dataTable thead > tr > th.dt-ordering-desc,
+table.dataTable thead > tr > td.dt-orderable-asc,
+table.dataTable thead > tr > td.dt-orderable-desc,
+table.dataTable thead > tr > td.dt-ordering-asc,
+table.dataTable thead > tr > td.dt-ordering-desc {
+  position: relative;
+  padding-right: 30px;
+}
+table.dataTable thead > tr > th.dt-orderable-asc span.dt-column-order,
+table.dataTable thead > tr > th.dt-orderable-desc span.dt-column-order,
+table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order,
+table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order,
+table.dataTable thead > tr > td.dt-orderable-asc span.dt-column-order,
+table.dataTable thead > tr > td.dt-orderable-desc span.dt-column-order,
+table.dataTable thead > tr > td.dt-ordering-asc span.dt-column-order,
+table.dataTable thead > tr > td.dt-ordering-desc span.dt-column-order {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+}
+table.dataTable thead > tr > th.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-orderable-asc span.dt-column-order:after,
+table.dataTable thead > tr > th.dt-orderable-desc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order:after,
+table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-orderable-asc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-orderable-desc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-ordering-asc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-ordering-desc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-ordering-desc span.dt-column-order:after {
+  left: 0;
+  opacity: 0.125;
+  line-height: 9px;
+  font-size: 0.8em;
+}
+table.dataTable thead > tr > th.dt-orderable-asc,
+table.dataTable thead > tr > th.dt-orderable-desc,
+table.dataTable thead > tr > td.dt-orderable-asc,
+table.dataTable thead > tr > td.dt-orderable-desc {
+  cursor: pointer;
+}
+
+table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order:after,
+table.dataTable thead > tr > td.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead > tr > td.dt-ordering-desc span.dt-column-order:after {
+  opacity: 1;
+}
+
+table.dataTable {
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap;
+  background-color: rgb(235, 235, 235);
+  border-radius: 5px;
+}
+
+.dark table.dataTable {
+  background-color: rgb(18, 39, 63);
+}
+
+table.dataTable thead {
+  color: #f2f2f2;
+  background-color: rgb(0, 46, 99);
+}
+
+table.dataTable thead th {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+table.dataTable td {
+  padding: 5px 5px;
+  text-align: left;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  white-space: wrap;
+}
+
+.dark table.dataTable td {
+  border-right: 1px solid #f8f8f8;
+  border-bottom: 1px solid #f8f8f8;
+}
+
+table.dataTable tr.child {
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+
+.dark table.dataTable tr.child {
+  background-color: rgb(0, 46, 99);
+  border-radius: 5px;
+}
+
+table.dataTable tr.child > td.child > ul.dtr-details .dtr-title::after {
+  content: ':'; /* Agrega el ":" después del contenido del encabezado */
+  margin-left: 4px;
+}
+
+table.dataTable tr.child > td.child > ul.dtr-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+table.dataTable tr.child > td.child > ul.dtr-details li {
+  margin-bottom: 10px;
+}
+
+table.dataTable tr.child > td.child > ul.dtr-details li > span {
+  font-weight: bold;
+}
+
+.dt-container {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.dt-button-info {
+  background-color: #2d3748;
+  color: white;
+  position: absolute;
+  top: 200px; /* Ajusta esta propiedad según sea necesario */
+  left: 50%; /* O ajusta la posición horizontal según necesites */
+  transform: translateX(-50%);
+  z-index: 9999; /* Asegura que el mensaje esté por encima de otros elementos */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.836);
+}

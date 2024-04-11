@@ -1,0 +1,47 @@
+{
+  "name": "frontend-me",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "@preline/overlay": "^2.0.2",
+    "axios": "^1.6.7",
+    "datatables.net": "^1.13.10",
+    "datatables.net-bs5": "^1.13.10",
+    "datatables.net-buttons-bs5": "^2.4.2",
+    "datatables.net-responsive-bs5": "^2.5.0",
+    "datatables.net-select-dt": "^1.7.0",
+    "datatables.net-vue3": "^2.1.3",
+    "dayjs": "^1.11.10",
+    "flowbite-datepicker": "^1.2.6",
+    "jszip": "^3.10.1",
+    "pdfmake": "^0.2.9",
+    "postcss-nesting": "^12.0.2",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.48.1",
+    "sweetalert2": "^11.10.5",
+    "vue": "^3.4.15",
+    "vue-multiselect": "^2.1.8",
+    "vue-router": "^4.2.5",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.3.3",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.49.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "postcss": "^8.4.34",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.0.11"
+  }
+}
