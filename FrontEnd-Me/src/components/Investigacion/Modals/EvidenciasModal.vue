@@ -272,7 +272,7 @@ export default {
           render: (data) => {
             return `
             <div class="w-full flex items-center justify-center">
-                        <a href="http://localhost:3000${data.urlEvi}" target="_blank"><button class="bg-green-500 text-whit text-white p-2 pt-2 rounded mr-2"><i class="pi pi-eye pointer-events-none"></i></button></a>
+                        <a href="http://10.31.142.243:3000${data.urlEvi}" target="_blank"><button class="bg-green-500 text-whit text-white p-2 pt-2 rounded mr-2"><i class="pi pi-eye pointer-events-none"></i></button></a>
                         <button class="btn-eliminar-evidencia bg-red-500 text-white p-2 pt-2 rounded" data-id="${data.id_evidencia}"><i class="pi pi-trash pointer-events-none"></i></button>
                     </div>
                       `

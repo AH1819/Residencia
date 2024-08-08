@@ -323,7 +323,7 @@ export default {
             return `
             <div class="w-full flex items-center justify-center">
                         <button title="Editar Registro" class="btn-editar-evidencia bg-yellow-500 text-white p-2 pt-3 rounded mr-2" data-id="${data.idDocumento}"><i class="pi pi-pencil pointer-events-none"></i></button>
-                        <a href="http://localhost:3000${data.urlDocumento}" target="_blank"><button class="bg-green-500 text-whit text-white p-2 pt-2 rounded mr-2"><i class="pi pi-eye pointer-events-none"></i></button></a>
+                        <a href="http://10.31.142.243:3000${data.urlDocumento}" target="_blank"><button class="bg-green-500 text-whit text-white p-2 pt-2 rounded mr-2"><i class="pi pi-eye pointer-events-none"></i></button></a>
                         <button class="btn-eliminar-evidencia bg-red-500 text-white p-2 pt-2 rounded" data-id="${data.idDocumento}"><i class="pi pi-trash pointer-events-none"></i></button>
                     </div>
                       `
@@ -440,7 +440,7 @@ export default {
         (tipo) => tipo.descripcion === evidencia.descripcion
       ).idTipoDocumento
       this.form.fecha = this.formatDate(evidencia.fecha)
-      const url = `http://localhost:3000${evidencia.urlDocumento}`
+      const url = `http://10.31.142.243:3000${evidencia.urlDocumento}`
       fetch(url)
         .then((response) => response.blob())
         .then((blob) => {

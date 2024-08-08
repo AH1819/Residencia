@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'http://10.31.142.243:3000'
 
 export default {
   obtenerHistorial() {
