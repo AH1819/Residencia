@@ -31,12 +31,19 @@ import 'datatables.net-responsive-dt'
 import ButtonsHtml5 from 'datatables.net-buttons/js/buttons.html5'
 import print from 'datatables.net-buttons/js/buttons.print'
 import pdfmake from 'pdfmake'
-import pdfFonts from 'pdfmake/build/vfs_fonts'
 import JsZip from 'jszip'
 import logoSuperior from '@/assets/image'
 import logoSuperior2 from '@/assets/image2'
 
-pdfmake.vfs = pdfFonts.pdfMake.vfs
+pdfmake.fonts = {
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics:
+      'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
+  }
+}
 window.JSZip = JsZip
 
 DataTable.use(DataTableLib)
