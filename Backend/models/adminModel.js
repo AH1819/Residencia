@@ -13,6 +13,7 @@ function getUsuarios(callback) {
     us.apellido_materno,
     us.n_plaza,
     us.sexo,
+    us.email as correo,
     us.status,
     COALESCE(GROUP_CONCAT(DISTINCT p.descripcion), 'Sin permiso') AS permisos,
     COALESCE(GROUP_CONCAT(DISTINCT  p.idPermisos), 'Sin permiso') AS idPermisos

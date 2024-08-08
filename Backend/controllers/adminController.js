@@ -11,7 +11,7 @@ function getUsuarios(req, res) {
       res.json(usuarios);
     }
   });
-}
+} 
 
 function insertUsuario(req, res) {
   const formData = async () => {
@@ -24,6 +24,7 @@ function insertUsuario(req, res) {
       apellido_paterno: req.body.apellido_paterno,
       apellido_materno: req.body.apellido_materno,
       sexo: req.body.sexo,
+      email: req.body.email,
       status: 1,
     };
   };
@@ -60,6 +61,7 @@ function updateUsuario(req, res) {
       apellido_paterno: req.body.apellido_paterno,
       apellido_materno: req.body.apellido_materno,
       sexo: req.body.sexo,
+      email: req.body.email,
     };
     if (hashedPassword) {
       formData.password = hashedPassword;

@@ -6,15 +6,175 @@
       @click="
         (isModalOpen = true), (title = 'Registrar Proyecto de Investigacion'), cargarDocentes()
       "
-      class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+      class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 mr-4"
     >
       <i class="pi pi-plus"></i>
       Registrar Proyecto
     </button>
+    <button
+      class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-2 rounded-md mb-4"
+      :class="
+        proyectos.length === 0
+          ? 'pointer-events-none opacity-50'
+          : isFilter
+            ? 'bg-red-500 hover:bg-red-600'
+            : 'pointer-events-auto'
+      "
+      @click="isFilter = !isFilter"
+    >
+      <span class="pi pi-filter mr-2"></span>Filtrar
+    </button>
+    <div
+      v-if="isFilter"
+      class="md:w-9/12 lg:w-full bg-white dark:bg-[#2D3748] border rounded-lg border-gray-200 p-6 mx-auto"
+    >
+      <ul class="grid w-full gap-6 grid-cols-2 lg:grid-cols-4 px-3">
+        <li>
+          <input
+            type="radio"
+            id="Status-radio"
+            name="tipo-reportes"
+            value="status"
+            class="hidden peer"
+            v-model="tipoReporte"
+          />
+          <label
+            for="Status-radio"
+            class="bg-white w-full inline-flex items-center justify-between p-5 text-gray-500 border border-gray-400 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+          >
+            <div class="block">
+              <div class="w-full text-lg font-semibold select-none dark:text-gray-200">
+                Por estatus<i class="pi pi-sync ml-4"></i>
+              </div>
+            </div>
+          </label>
+        </li>
+        <li>
+          <input
+            type="radio"
+            id="Fecha-radio"
+            name="tipo-reportes"
+            value="fecha"
+            class="hidden peer"
+            v-model="tipoReporte"
+          />
+          <label
+            for="Fecha-radio"
+            class="inline-flex items-center justify-between p-5 text-gray-500 bg-white w-full border border-gray-400 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+          >
+            <div class="block">
+              <div class="w-full text-lg font-semibold select-none dark:text-gray-200">
+                Por fecha<i class="pi pi-calendar ml-4"></i>
+              </div>
+            </div>
+          </label>
+        </li>
+        <button
+          v-if="tipoReporte !== ''"
+          type="button"
+          class="text-gray-400 bg-transparent hover:bg-red-600 hover:text-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
+          @click="
+            (tipoReporte = ''),
+              (status = null),
+              (reporteFecha.fechaInicio = null),
+              (reporteFecha.fechaFin = null),
+              (proyectosFiltrados = proyectos),
+              (tipoFecha = null)
+          "
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Reset</span>
+        </button>
+      </ul>
+      <template v-if="tipoReporte === 'status'">
+        <div class="mt-6 px-3">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Reporte por estatus
+          </h3>
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+            <div class="flex flex-col">
+              <label for="status" class="text-gray-700 dark:text-gray-200">Estatus</label>
+              <select
+                id="status"
+                v-model="status"
+                class="w-full px-4 py-2 mt-2 text-gray-700 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                @change="filtrarProyectos()"
+              >
+                <option value="null">Selecciona una opcion</option>
+                <option value="1">Activos</option>
+                <option value="2">En proceso</option>
+                <option value="3">Finalizados</option>
+                <option value="0">Rechazados</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-else-if="tipoReporte === 'fecha'">
+        <div class="mt-6 px-3">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Reporte por fecha
+          </h3>
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+            <div class="flex flex-col">
+              <label for="status" class="text-gray-700 dark:text-gray-200">Tipo de fecha</label>
+              <select
+                id="status"
+                v-model="tipoFecha"
+                class="w-full px-4 py-2 mt-2 text-gray-700 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                @change="filtrarProyectos()"
+              >
+                <option value="null">Selecciona una opcion</option>
+                <option value="1">Fecha de registro</option>
+                <option value="2">Fecha de inicio</option>
+                <option value="3">Fecha de fin</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label for="fecha-inicio" class="text-gray-700 dark:text-gray-200"
+                >Fecha de inicio</label
+              >
+              <input
+                type="date"
+                id="fecha-inicio"
+                v-model="reporteFecha.fechaInicio"
+                @change="filtrarProyectos()"
+                class="w-full px-4 py-2 mt-2 text-gray-700 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label for="fecha-fin" class="text-gray-700 dark:text-gray-200">Fecha de fin</label>
+              <input
+                type="date"
+                id="fecha-fin"
+                v-model="reporteFecha.fechaFin"
+                @change="filtrarProyectos()"
+                class="w-full px-4 py-2 mt-2 text-gray-700 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
     <TableModel
-      :data="proyectos"
+      :data="proyectosFiltrados"
       :columns="columns"
-      :title="'Reporte de Proyectos de Investigacion'"
+      :titleProp="'Reporte de Proyectos de Investigacion'"
+      :seccionProp="'COOR. DE INVESTIGACIÓN Y POSGRADO'"
     >
       <template #headers>
         <th>ID</th>
@@ -223,6 +383,15 @@ export default {
   data() {
     return {
       proyectos: [],
+      isFilter: false,
+      tipoReporte: '',
+      status: null,
+      reporteFecha: {
+        fechaInicio: null,
+        fechaFin: null
+      },
+      tipoFecha: null,
+      proyectosFiltrados: [],
       docentes: [
         {
           rfc: '',
@@ -367,15 +536,58 @@ export default {
     })
   },
   methods: {
-    obtenerProyectos() {
-      apiInvestigacion
-        .obtenerProyectos()
-        .then((response) => {
-          this.proyectos = response.data
+    async obtenerProyectos() {
+      try {
+        const { data } = await apiInvestigacion.obtenerProyectos()
+        this.proyectos = data
+        this.proyectosFiltrados = this.proyectos
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    filtrarProyectos() {
+      if (this.tipoReporte === 'status') {
+        if (this.status === null || this.status === 'null') {
+          this.proyectosFiltrados = this.proyectos
+          return
+        }
+        this.proyectosFiltrados = this.proyectos.filter((proyecto) => {
+          return proyecto.estatus === parseInt(this.status)
         })
-        .catch((error) => {
-          console.error('Error al obtener los proyectos:', error)
-        })
+      } else if (this.tipoReporte === 'fecha') {
+        if (
+          this.reporteFecha.fechaInicio === null ||
+          this.reporteFecha.fechaFin === null ||
+          this.tipoFecha === null ||
+          this.tipoFecha === 'null'
+        ) {
+          this.proyectosFiltrados = this.proyectos
+          return
+        }
+        if (this.tipoFecha === '1') {
+          this.proyectosFiltrados = this.proyectos.filter((proyecto) => {
+            return (
+              proyecto.fecha_registro >= this.reporteFecha.fechaInicio &&
+              proyecto.fecha_registro <= this.reporteFecha.fechaFin
+            )
+          })
+        } else if (this.tipoFecha === '2') {
+          this.proyectosFiltrados = this.proyectos.filter((proyecto) => {
+            return (
+              proyecto.fecha_inicio >= this.reporteFecha.fechaInicio &&
+              proyecto.fecha_inicio <= this.reporteFecha.fechaFin
+            )
+          })
+        } else if (this.tipoFecha === '3') {
+          this.proyectosFiltrados = this.proyectos.filter((proyecto) => {
+            return (
+              proyecto.fecha_final >= this.reporteFecha.fechaInicio &&
+              proyecto.fecha_final <= this.reporteFecha.fechaFin
+            )
+          })
+        }
+      }
     },
     cambiarStatus(id) {
       Swal.fire({

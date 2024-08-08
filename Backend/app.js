@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv"); // <- Importación de dotenv
+const os = require("os");
+const db = require("./config/db.config");
+
 const app = express();
 const authRoutes = require("./routes/authRoutes");
 const tutoriasRoutes = require("./routes/TutoriasRoutes");
@@ -9,6 +12,7 @@ const ensenanzaRoutes = require("./routes/EnsenanzaRoutes");
 const investigacionRoutes = require("./routes/InvestigacionRoutes");
 const secretariaRoutes = require("./routes/secretariaRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const historialRoutes = require("./routes/historialRoutes");
 
 // Cargar las variables de entorno desde el archivo .env
 dotenv.config();
@@ -23,10 +27,25 @@ app.use("/ensenanza", ensenanzaRoutes);
 app.use("/investigacion", investigacionRoutes);
 app.use("/secretaria", secretariaRoutes);
 app.use("/admin", adminRoutes);
+app.use("/historial", historialRoutes);
+
+function getIPAddress() {
+  const networkInterfaces = os.networkInterfaces();
+  for (const interfaceName in networkInterfaces) {
+    const networkInterface = networkInterfaces[interfaceName];
+    for (const alias of networkInterface) {
+      if (alias.family === "IPv4" && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return "127.0.0.1"; // Default to localhost if no external IP found
+}
 
 function startServer(port) {
   const server = app.listen(port, () => {
-    console.log(`Servidor OK en: http://192.168.48.128:${port}`);
+    const ip = getIPAddress();
+    console.log(`Servidor OK en: http://${ip}:${port}`);
   });
 
   server.on("error", (err) => {

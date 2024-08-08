@@ -96,7 +96,8 @@
     <TableModel
       :data="actividadesFiltradas"
       :columns="columns"
-      :title="'Reporte de Proyectos de Investigacion'"
+      :titleProp="'PROGRAMA DE ACCION TUTORIAL'"
+      :seccionProp="'COOR. DE TUTORIAS'"
     >
       <template #headers>
         <th>No_Actividad</th>
@@ -141,43 +142,43 @@
         </div>
         <div class="py-1 px-3 max-h-96 overflow-y-auto">
           <form @submit.prevent="submitForm" id="form-tutorias">
-            <div class="w-full px-3">
+            <div class="w-full px-3 mb-4">
               <label
                 for="nombreActividad-modal"
-                class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                 >Nombre de la actividad</label
               >
               <input
                 id="nombreActividad-modal"
                 type="text"
-                class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Simposio de tutorías"
                 v-model="form.nombre"
               />
             </div>
             <div class="grid md:grid-cols-2">
-              <div class="w-full px-3">
+              <div class="w-full px-3 mb-4">
                 <label
                   for="fecha-modal"
-                  class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+                  class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                   >Fecha</label
                 >
                 <input
                   id="fecha-modal"
                   type="date"
-                  class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   v-model="form.fecha"
                 />
               </div>
-              <div class="w-full px-3">
+              <div class="w-full px-3 mb-4">
                 <label
                   for="materia-modal"
-                  class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+                  class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                   >Programa academico</label
                 >
                 <select
                   id="materia-modal"
-                  class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   v-model="form.prog_academico"
                 >
                   <option value="" selected>Selecciona una materia</option>
@@ -194,12 +195,12 @@
             <div class="w-full px-3 mb-4">
               <label
                 for="textarea"
-                class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                 >Descripcion</label
               >
               <textarea
                 id="textarea"
-                class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Escribe una descripción de la actividad"
                 v-model="form.descripcion"
               ></textarea>
@@ -228,7 +229,7 @@
     <EvidenciasModal
       :showModal="showEvid"
       :actividadId="form.id_act.toString()"
-      @close="showEvid = false"
+      @close="(showEvid = false), resetForm()"
       @cambio-realizado="obtenerActividades()"
     />
   </div>
@@ -260,6 +261,8 @@ export default {
       isModalOpen: false,
       showEvid: false,
       title: '',
+      fechaInicioReport: '',
+      fechaFinReport: '',
       isFilter: false,
       tipoFiltrado: {
         fechaInicio: '',
@@ -344,7 +347,6 @@ export default {
         .buscarProgAcademico()
         .then((response) => {
           this.programasAcademicos = response.data
-          console.log('Programas academicos:', this.programasAcademicos)
         })
         .catch((error) => {
           console.error('Error al obtener los programas academicos:', error)
@@ -358,7 +360,7 @@ export default {
       const day = String(dateObject.getDate()).padStart(2, '0')
 
       // Formatear la fecha en el formato deseado (YYYY-MM-DD)
-      const formattedDate = `${year}-${month}-${day}`
+      const formattedDate = `${day}-${month}-${year}`
       return formattedDate
     },
     cargarDatosParaEditar(id) {
@@ -374,18 +376,34 @@ export default {
     mostrarEvidencias(id) {
       this.showEvid = true
       this.form.id_act = id
-      console.log('Actividad seleccionada:', this.form.id_act)
     },
     filtrarActividades() {
-      if (this.tipoFiltrado.fechaInicio && this.tipoFiltrado.fechaFin) {
-        this.actividadesFiltradas = this.actividades.filter((actividad) => {
-          const fechaActividad = new Date(actividad.fechaActTutorias)
+      if (this.tipoFiltrado.fechaInicio || this.tipoFiltrado.fechaFin) {
+        if (this.tipoFiltrado.fechaInicio && this.tipoFiltrado.fechaFin) {
           const fechaInicio = new Date(this.tipoFiltrado.fechaInicio)
           const fechaFin = new Date(this.tipoFiltrado.fechaFin)
-          return fechaActividad >= fechaInicio && fechaActividad <= fechaFin
-        })
+
+          this.fechaInicioReport = this.formatDate(fechaInicio)
+          this.fechaFinReport = this.formatDate(fechaFin)
+
+          console.log(this.fechaInicioReport)
+          console.log(this.fechaFinReport)
+          console.log(this.titleReport)
+
+          this.actividadesFiltradas = this.actividades.filter((actividad) => {
+            const fechaActividad = new Date(actividad.fechaActTutorias)
+            return fechaActividad >= fechaInicio && fechaActividad <= fechaFin
+          })
+        } else {
+          // Si solo hay una fecha o ninguna, reinicia las fechas en el reporte
+          this.fechaInicioReport = ''
+          this.fechaFinReport = ''
+        }
       } else {
-        this.actividadesFiltradas = this.actividades
+        this.obtenerActividades()
+        // Reinicia las fechas en el reporte
+        this.fechaInicioReport = ''
+        this.fechaFinReport = ''
       }
     },
     resetForm() {

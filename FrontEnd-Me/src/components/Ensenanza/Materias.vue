@@ -11,7 +11,8 @@
     <TableModel
       :data="dataMaterias"
       :columns="columns"
-      :title="'Reporte de Proyectos de Investigacion'"
+      :titleProp="'Reporte de Registro de Materias'"
+      :seccionProp="'COOR. DE INGENIERÍA EN DESARROLLO Y TECNOLOGÍAS DE SOFTWARE'"
     >
       <template #headers>
         <th>ID</th>

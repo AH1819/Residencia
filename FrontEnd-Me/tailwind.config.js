@@ -4,6 +4,9 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      backgroundImage: {
+        'fondo': "url('/FrontEnd-Me/src/assets/fondo.jpg')"
+      },
       colors: {
         primaryBlue: 'rgb(0,46,99)',
         SecundaryGold: 'rgb(212,176,18)',

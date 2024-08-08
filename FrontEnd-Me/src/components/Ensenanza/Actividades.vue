@@ -148,7 +148,8 @@
     <TableModel
       :data="actividadesFiltradas"
       :columns="columns"
-      :title="'Reporte de actividades PAT'"
+      :titleProp="'Reporte de actividades'"
+      :seccionProp="'COOR. DE INGENIERÍA EN DESARROLLO Y TECNOLOGÍAS DE SOFTWARE'"
     >
       <template #headers>
         <th>ID</th>

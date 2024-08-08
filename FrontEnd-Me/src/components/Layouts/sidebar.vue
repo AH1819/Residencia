@@ -33,14 +33,6 @@
             <span class="text-white">Usuarios</span>
           </div>
         </router-link>
-        <router-link to="/registro-actividad" v-if="esSuperAdmin()" @click="toggleSidebar()">
-          <div
-            class="w-full flex items-center text-SecundaryGold h-10 pl-4 hover:bg-SecundaryGold rounded-lg cursor-pointer hover:text-white"
-          >
-            <i class="pi pi-book text-2xl fill-current mr-2"></i>
-            <span class="text-white">Registros</span>
-          </div>
-        </router-link>
       </div>
       <div class="mb-4 px-4">
         <!-- ENSEÑANZA -->
@@ -123,14 +115,6 @@
             <span class="text-white">Actividades</span>
           </div>
         </router-link>
-        <router-link to="/reportes" v-if="tienePermiso('Investigacion')" @click="toggleSidebar()">
-          <div
-            class="w-full flex items-center text-SecundaryGold h-10 pl-4 hover:bg-SecundaryGold rounded-lg cursor-pointer hover:text-white"
-          >
-            <i class="pi pi-book text-2xl fill-current mr-2"></i>
-            <span class="text-white">Reportes</span>
-          </div>
-        </router-link>
       </div>
       <div class="mb-4 px-4">
         <p
@@ -145,6 +129,14 @@
           >
             <i class="pi pi-folder-open text-2xl fill-current mr-2"></i>
             <span class="text-white">Actividades</span>
+          </div>
+        </router-link>
+        <router-link to="/docentes-secretaria" v-if="tienePermiso('Secretaria')" @click="toggleSidebar()">
+          <div
+            class="w-full flex items-center text-SecundaryGold h-10 pl-4 hover:bg-SecundaryGold rounded-lg cursor-pointer hover:text-white"
+          >
+            <i class="pi pi-user text-2xl fill-current mr-2"></i>
+            <span class="text-white">Docentes</span>
           </div>
         </router-link>
       </div>

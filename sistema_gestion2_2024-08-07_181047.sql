@@ -105,15 +105,15 @@ DROP TABLE IF EXISTS `documentos_docentes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `documentos_docentes` (
   `idDocumento` int(11) NOT NULL AUTO_INCREMENT,
-  `idSecretaria` int(11) NOT NULL,
+  `idUsuario` varchar(13) NOT NULL,
+  `nombreDoc` varchar(100) NOT NULL,
   `idTipoDocumento` int(11) NOT NULL,
-  `urlDocumento` char(255) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `nombreDoc` varchar(45) NOT NULL,
+  `urlDocumento` varchar(100) DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`idDocumento`),
-  KEY `idSecretaria` (`idSecretaria`),
+  KEY `idUsuario` (`idUsuario`),
   KEY `idTipoDocumento` (`idTipoDocumento`),
-  CONSTRAINT `documentos_docentes_ibfk_1` FOREIGN KEY (`idSecretaria`) REFERENCES `secretariaac` (`idSecretaria`),
+  CONSTRAINT `documentos_docentes_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`rfc`),
   CONSTRAINT `documentos_docentes_ibfk_2` FOREIGN KEY (`idTipoDocumento`) REFERENCES `tipo_documento` (`idTipoDocumento`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -175,6 +175,26 @@ CREATE TABLE `evidenciastutorias` (
   KEY `idActividad_idx` (`idActividad`),
   CONSTRAINT `idActividad` FOREIGN KEY (`idActividad`) REFERENCES `actividadestutorias` (`idActTutorias`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `historial_cambios`
+--
+
+DROP TABLE IF EXISTS `historial_cambios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `historial_cambios` (
+  `idhistorial_cambios` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `idusuario` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `tabla_afectada` varchar(50) DEFAULT NULL,
+  `valor_anterior` varchar(50) DEFAULT NULL,
+  `valor_nuevo` varchar(50) DEFAULT NULL,
+  `fecha_cambio` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`idhistorial_cambios`),
+  KEY `idusuario` (`idusuario`),
+  CONSTRAINT `historial_cambios_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`rfc`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,6 +349,8 @@ CREATE TABLE `usuarios` (
   `n_plaza` varchar(35) DEFAULT NULL,
   `sexo` varchar(6) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`rfc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -364,4 +386,4 @@ CREATE TABLE `usuarios_permisos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-11 13:51:43
+-- Dump completed on 2024-08-07 18:10:53

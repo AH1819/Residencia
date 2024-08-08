@@ -9,7 +9,21 @@
     </DataTable>
   </div>
 </template>
- 
+
+<style>
+@media print {
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    border-top: 1px solid #000;
+    padding: 10px 0;
+  }
+}
+</style>
+
 <script>
 import DataTable from 'datatables.net-vue3'
 import DataTableLib from 'datatables.net'
@@ -19,8 +33,8 @@ import print from 'datatables.net-buttons/js/buttons.print'
 import pdfmake from 'pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import JsZip from 'jszip'
-import logoSuperior from '@/assets/LogoSuperior'
-import logoInferior from '@/assets/LogoInferior'
+import logoSuperior from '@/assets/image'
+import logoSuperior2 from '@/assets/image2'
 
 pdfmake.vfs = pdfFonts.pdfMake.vfs
 window.JSZip = JsZip
@@ -47,7 +61,12 @@ export default {
       type: String,
       default: 'Blfrtip'
     },
-    title: {
+    titleProp: {
+      type: String,
+      default: 'Reporte',
+      required: true
+    },
+    seccionProp: {
       type: String,
       default: 'Reporte'
     },
@@ -59,6 +78,8 @@ export default {
   data() {
     return {
       localData: this.data,
+      titleReport: this.titleProp,
+      titleSeccion: this.seccionProp,
       options: {
         responsive: true,
         autWidth: false,
@@ -89,7 +110,7 @@ export default {
         },
         buttons: [
           {
-            title: this.title,
+            title: this.titleProp,
             extend: 'excelHtml5',
             text: '<i class="pi pi-file-excel mr-2"></i>Excel',
             className: 'bg-green-500 text-white px-4 py-2 rounded-md mb-4',
@@ -114,12 +135,11 @@ export default {
             })(this)
           },
           {
-            title: this.title,
+            title: this.titleProp,
             extend: 'pdfHtml5',
             text: '<i class="pi pi-file-pdf mr-2"></i>PDF',
             className: 'bg-red-500 text-white px-4 py-2 rounded-md mb-4',
             customize: (function (component) {
-              // Guarda una referencia al contexto del componente de Vue
               return function (doc) {
                 if (component.columnHidden) {
                   // Excluir la última columna del PDF
@@ -127,39 +147,79 @@ export default {
                     row.pop()
                   })
                 }
-                // Añadir margen superior al título
-                if (doc.content[0].text) {
-                  // Verifica si hay un título
-                  doc.content[0].margin = [0, 50, 0, 0] // 50 es el margen superior
-                }
+                // Agregar logos y título en la parte superior
+                doc.content.unshift({
+                  columns: [
+                    {
+                      image: logoSuperior, // Reemplaza 'logoSuperior1' con el ID de tu logo
+                      width: 100,
+                      alignment: 'left'
+                    },
+                    {
+                      text:
+                        'UNIVERSIDAD AUTÓNOMA DE CHIAPAS\nFACULTAD DE NEGOCIOS C-IV\n' +
+                        component.titleSeccion,
+                      style: 'headerTitle',
+                      alignment: 'center'
+                    },
+                    {
+                      image: logoSuperior2, // Reemplaza 'logoSuperior2' con el ID de tu logo
+                      width: 70,
+                      alignment: 'right'
+                    }
+                  ],
+                  margin: [0, 0, 0, 10] // Margen inferior para separar del contenido
+                })
 
-                // Añadir margen superior a la tabla para moverla hacia abajo
-                if (doc.content[1].table) {
-                  // Verifica si hay una tabla
-                  doc.content[1].margin = [0, 10, 0, 0] // 70 es el margen superior
-                }
-                doc['header'] = function () {
-                  return {
-                    image: logoSuperior,
-                    width: 550,
-                    alignment: 'center',
-                    margin: [0, 25, 0, 25] // Ajusta según necesites
-                  }
-                }
-
+                // Agregar pie de página con dirección
                 doc['footer'] = function () {
                   return {
-                    image: logoInferior,
-                    width: 550,
-                    alignment: 'center',
-                    margin: [0, 15, 0, 15] // Ajusta según necesites
+                    columns: [
+                      {
+                        text: 'Carretera a Puerto Madero Km. 1.5 | Tapachula, Chiapas, México. C.P. 30700\nwww.negocios.unach.mx | Tel.: 62-5-11-66, 62-5-17-23, 62-6-83-72',
+                        fontSize: 10,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 10]
+                      }
+                    ],
+                    margin: [10, 0]
                   }
+                }
+
+                // Estilos
+                doc.styles = {
+                  headerTitle: {
+                    fontSize: 14,
+                    bold: true,
+                    margin: [0, 0, 0, 10]
+                  },
+                  tableHeader: {
+                    fillColor: '#002E63',
+                    color: 'white',
+                    bold: true
+                  },
+                  tableBody: {
+                    fillColor: '#EFEFEF'
+                  }
+                }
+
+                // Aplicar estilos a la tabla
+                if (doc.content[1].table) {
+                  doc.content[1].table.body.forEach((row, rowIndex) => {
+                    row.forEach((cell) => {
+                      if (rowIndex === 0) {
+                        cell.style = 'tableHeader'
+                      } else {
+                        cell.style = 'tableBody'
+                      }
+                    })
+                  })
                 }
               }
             })(this)
           },
           {
-            title: this.title,
+            title: this.titleProp,
             extend: 'print',
             text: '<i class="pi pi-print mr-2"></i>Imprimir',
             className: 'bg-blue-500 text-white px-4 py-2 rounded-md mb-4',
@@ -197,23 +257,71 @@ export default {
                 // Agregar logo superior
                 const logoSuperiorElement = win.document.createElement('img')
                 logoSuperiorElement.src = logoSuperior
-                logoSuperiorElement.style.width = '100%'
+                logoSuperiorElement.style.width = '150px'
                 logoSuperiorElement.style.height = 'auto'
                 logoSuperiorElement.style.margin = '25px 0 25px 0'
-                win.document.body.insertBefore(logoSuperiorElement, win.document.body.firstChild)
 
-                // Agregar logo inferior
+                // Agregar logo superior2
+                const logoSuperiorElement2 = win.document.createElement('img')
+                logoSuperiorElement2.src = logoSuperior2
+                logoSuperiorElement2.style.width = '100px'
+                logoSuperiorElement2.style.height = 'auto'
+                logoSuperiorElement2.style.margin = '25px 0 25px 0'
+
+                // Crear el contenedor
+                const contenedorElement = win.document.createElement('div')
+                contenedorElement.style.display = 'flex'
+                contenedorElement.style.alignItems = 'center'
+                contenedorElement.style.justifyContent = 'space-between'
+                contenedorElement.style.width = '100%' // Asegura que el contenedor ocupe todo el ancho
+
+                // Agregar el logo y el texto a un sub-contenedor para que estén juntos a la izquierda
+                const subContenedorElement = win.document.createElement('div')
+                subContenedorElement.style.display = 'flex'
+                subContenedorElement.style.alignItems = 'center'
+
+                // Agregar el primer logo al sub-contenedor
+                subContenedorElement.appendChild(logoSuperiorElement)
+
+                // Crear el texto con saltos de línea
+                const textoElement = win.document.createElement('div')
+                textoElement.innerHTML = `UNIVERSIDAD AUTÓNOMA DE CHIAPAS<br>FACULTAD DE NEGOCIOS C-IV<br>${component.titleSeccion}`
+                textoElement.style.marginLeft = '10px' // Espacio entre la imagen y el texto
+
+                // Agregar el texto al sub-contenedor
+                subContenedorElement.appendChild(textoElement)
+
+                // Agregar el sub-contenedor al contenedor principal
+                contenedorElement.appendChild(subContenedorElement)
+
+                // Agregar el segundo logo al contenedor principal
+                contenedorElement.appendChild(logoSuperiorElement2)
+
+                // Insertar el contenedor en el cuerpo del documento
+                win.document.body.insertBefore(contenedorElement, win.document.body.firstChild)
+
+                // Crear el pie de página
+                const textoElementDown = win.document.createElement('div')
+                textoElementDown.className = 'footer'
+                textoElementDown.innerHTML = `Carretera a Puerto Madero Km. 1.5 | Tapachula, Chiapas, México. C.P. 30700 | www.negocios.unach.mx<br>
+Tel.: 62-5-11-66, 62-5-17-23, 62-6-83-72`
+                textoElementDown.style.marginLeft = '0px'
+
+                // Insertar el pie de página en el cuerpo del documento
+                win.document.body.appendChild(textoElementDown)
+
+                /* // Agregar logo inferior
                 const logoInferiorElement = win.document.createElement('img')
                 logoInferiorElement.src = logoInferior
                 logoInferiorElement.style.width = '85%'
                 logoInferiorElement.style.height = '18px'
                 logoInferiorElement.style.margin = '20px 20px 20px 20px'
-                win.document.body.appendChild(logoInferiorElement)
+                win.document.body.appendChild(logoInferiorElement)*/
               }
             })(this)
           },
           {
-            title: this.title,
+            title: this.titleProp,
             extend: 'copy',
             text: '<i class="pi pi-copy mr-2"></i>Copiar',
             className: 'bg-yellow-500 text-white px-4 py-2 rounded-md mb-4',

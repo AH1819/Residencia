@@ -6,6 +6,12 @@ const authenticateJWT = require("../middlewares/authenticateJWT");
 // Ruta para iniciar sesión
 router.post("/login", AuthController.login);
 
+// Ruta para obtener información de un usuario por RFC
+router.get("/usuario/:rfc", AuthController.getUser);
+
+// Ruta para enviar un correo electrónico
+router.post("/send-email", AuthController.sendEmail);
+
 // Ruta para obtener permisos de un usuario por RFC
 router.get("/permisos/:rfc", authenticateJWT, AuthController.getPermisos);
 

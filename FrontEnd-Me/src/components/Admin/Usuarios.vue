@@ -8,12 +8,18 @@
     >
       <span class="pi pi-user-plus mr-2"></span>Agregar Usuario
     </button>
-    <TableModel :data="usuarios" :columns="columnas" :title="'Reporte de actividades PAT'">
+    <TableModel
+      :data="usuarios"
+      :columns="columnas"
+      :titleProp="'Reporte de usuarios'"
+      :seccionProp="'ADMINISTRADOR'"
+    >
       <template #headers>
         <th>RFC</th>
         <th>Nombre</th>
         <th>Apellido Paterno</th>
         <th>Apellido Materno</th>
+        <th>Correo</th>
         <th>Permisos</th>
         <th>Status</th>
         <th></th>
@@ -153,6 +159,21 @@
                 Por favor, selecciona un sexo
               </p>
             </div>
+            <div class="w-full px-3 md:mb-4">
+              <label
+                class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
+                for="apellido_materno"
+              >
+                Correo
+              </label>
+              <input
+                v-model="form.correo"
+                type="text"
+                id="correo"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Ej. ejemplo@unach.mx"
+              />
+            </div>
           </form>
         </div>
         <div class="px-4 py-3 border-t border-gray-200">
@@ -257,11 +278,15 @@
 
 <script>
 import TableModel from '../TableModel.vue'
-import apiAdmin from '../../services/apiAdmin'
+import apiAdmin from '@/services/apiAdmin'
+import { mapState } from 'vuex'
 import Swal from 'sweetalert2'
 
 export default {
   name: 'Usuarios-admin',
+  computed: {
+    ...mapState(['user'])
+  },
   components: {
     TableModel
   },
@@ -277,7 +302,8 @@ export default {
         nombre_Doce: '',
         apellido_paterno: '',
         apellido_materno: '',
-        sexo: null
+        sexo: null,
+        correo: ''
       },
       usuarios: [],
       usuarioPermisos: null,
@@ -298,6 +324,7 @@ export default {
         { data: 'nombre_Doce' },
         { data: 'apellido_paterno' },
         { data: 'apellido_materno' },
+        { data: 'correo' },
         {
           title: 'Permisos',
           data: null,
@@ -368,15 +395,18 @@ export default {
 
       return rfcPattern.test(rfc.toUpperCase())
     },
-    obtenerData() {
-      apiAdmin
-        .getUsuarios()
-        .then((response) => {
-          this.usuarios = response.data
-        })
-        .catch((error) => {
-          console.error('Error al obtener los registros:', error)
-        })
+    isValidEmail(email) {
+      const regex = /^[^\s@]+@unach\.mx$/
+      return regex.test(email)
+    },
+    async obtenerData() {
+      try {
+        const response = await apiAdmin.getUsuarios()
+        this.usuarios = response.data
+        await this.actualizarUser() // Llama a actualizarUser después de obtener los datos
+      } catch (error) {
+        console.error('Error al obtener los registros:', error)
+      }
     },
     cargarParaEditar(id) {
       this.title = 'Editar Usuario'
@@ -389,6 +419,7 @@ export default {
         this.form.apellido_paterno = docentes.apellido_paterno
         this.form.apellido_materno = docentes.apellido_materno
         this.form.sexo = docentes.sexo
+        this.form.correo = docentes.correo
       }
     },
     guardarDocente() {
@@ -408,6 +439,15 @@ export default {
         })
         return
       }
+      if (!this.isValidEmail(this.form.correo)) {
+        console.log(this.form.correo)
+        Swal.fire({
+          title: 'Correo inválido',
+          text: 'El correo debe ser de la UNACH',
+          icon: 'warning'
+        })
+        return
+      }
       const data = {
         editRFC: this.form.editRFC,
         rfc: this.form.rfc.toUpperCase(),
@@ -415,7 +455,8 @@ export default {
         nombre_Doce: this.form.nombre_Doce,
         apellido_paterno: this.form.apellido_paterno,
         apellido_materno: this.form.apellido_materno,
-        sexo: this.form.sexo
+        sexo: this.form.sexo,
+        email: this.form.correo
       }
 
       let promise
@@ -463,6 +504,18 @@ export default {
           })
           this.resetForm()
         })
+    },
+    async actualizarUser() {
+      const userUp = this.usuarios.find((item) => item.rfc === this.user.rfc)
+      if (userUp) {
+        // Crea una copia del objeto userUp
+        const userUpCopy = { ...userUp, email: userUp.correo }
+        delete userUpCopy.correo
+        this.$store.dispatch('setUser', userUpCopy)
+        localStorage.setItem('user', JSON.stringify(userUpCopy))
+      } else {
+        console.warn('Usuario no encontrado')
+      }
     },
     cambiarStatus(id, status) {
       Swal.fire({
@@ -567,6 +620,7 @@ export default {
       this.form.apellido_paterno = ''
       this.form.apellido_materno = ''
       this.form.sexo = null
+      this.form.correo = ''
       this.isModalOpen = false
       this.isModalPermisos = false
     }

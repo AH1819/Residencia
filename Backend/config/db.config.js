@@ -1,18 +1,27 @@
-const mysql = require('mysql');
+const mysql = require("mysql");
 
-const conexion = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'sistema_gestion2'
+const pool = mysql.createPool({
+  connectionLimit: 10, // Número máximo de conexiones en el pool
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "sistema_gestion2",
 });
 
-conexion.connect(function (error) {
-    if (error) {
-        throw error;
-    } else {
-        console.log("La conexion es exitosa");
-    }
+pool.on("connection", function (connection) {
+  console.log("Conexión a la base de datos establecida");
 });
 
-module.exports = conexion;
+pool.on("error", function (error) {
+  console.error("Error en la conexión a la base de datos:", error);
+  if (
+    error.code === "PROTOCOL_CONNECTION_LOST" ||
+    error.code === "ECONNRESET"
+  ) {
+    console.error("Conexión a la base de datos perdida, reconectando...");
+  } else {
+    throw error;
+  }
+});
+
+module.exports = pool;

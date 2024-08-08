@@ -60,7 +60,7 @@ export default {
           alt: 'png-card-sitio-web',
           description:
             'Bienvenido al Módulo de Secretaría Académica: Esta plataforma está diseñada para gestionar y almacenar información detallada sobre los docentes y sus actividades académicas. Aquí podrás acceder y actualizar datos sobre formación académica, certificaciones, participación en congresos, cursos impartidos, y publicaciones, contribuyendo a un eficiente manejo de los recursos académicos.',
-          route: '/',
+          route: '/secretaria',
           requiredPermission: 'Secretaria'
         }
       ]

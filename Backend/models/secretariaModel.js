@@ -1,8 +1,31 @@
 const db = require("../config/db.config");
 
 function showAll(callback) {
-  const query =
-    "SELECT * FROM secretariaAc";
+  const query = `
+  SELECT 
+    usr.rfc,
+    usr.nombre_Doce,
+    usr.apellido_paterno,
+    usr.apellido_materno,
+    usr.n_plaza,
+    usr.fecha_creacion,
+    COUNT(dd.idUsuario) AS cantidad_evidencias
+FROM 
+    usuarios usr
+LEFT JOIN 
+    documentos_docentes dd
+ON 
+    usr.rfc = dd.idUsuario 
+WHERE 
+    usr.n_plaza IS NOT NULL 
+GROUP BY 
+    usr.rfc,
+    usr.nombre_Doce,
+    usr.apellido_paterno,
+    usr.apellido_materno,
+    usr.n_plaza,
+    usr.fecha_creacion;
+`;
   db.query(query, (error, rows) => {
     if (error) {
       callback(error, null);
@@ -49,9 +72,10 @@ function eliminarDocente(id, callback) {
 
 function obtenerDocumentos(idSecretaria, callback) {
   const query =
-    "SELECT dd.idDocumento, dd.idSecretaria,dd.nombreDoc, td.descripcion, dd.urlDocumento, dd.fecha FROM documentos_docentes AS dd JOIN tipo_documento AS td ON dd.idTipoDocumento = td.idTipoDocumento WHERE dd.idSecretaria = ?;";
+    "SELECT dd.idDocumento, dd.idUsuario,dd.nombreDoc, td.descripcion, dd.urlDocumento, dd.fecha FROM documentos_docentes AS dd JOIN tipo_documento AS td ON dd.idTipoDocumento = td.idTipoDocumento WHERE dd.idUsuario = ?;";
   db.query(query, [idSecretaria], (error, rows) => {
     if (error) {
+      console.log("error:", error);
       callback(error, null);
     } else {
       callback(null, rows);
@@ -60,8 +84,7 @@ function obtenerDocumentos(idSecretaria, callback) {
 }
 
 function getTipo(callback) {
-  const query =
-    "SELECT * FROM tipo_documento";
+  const query = "SELECT * FROM tipo_documento";
   db.query(query, (error, rows) => {
     if (error) {
       callback(error, null);
@@ -126,5 +149,5 @@ module.exports = {
   insertarDocumentos,
   obtenerDocumentosPorId,
   actualizarDocumentos,
-  eliminarDocumentos
+  eliminarDocumentos,
 };

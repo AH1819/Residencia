@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
-import ModulosView from '../views/ModulosView.vue'
-import NotFound from '../views/404.vue'
-import NoPermisos from '../views/noPermisos.vue'
-import Docentes from '../components/Ensenanza/Docentes.vue'
+import Login from '@/views/Login.vue'
+import Home from '@/views/Home.vue'
+import ModulosView from '@/views/ModulosView.vue'
+import NotFound from '@/views/404.vue'
+import NoPermisos from '@/views/noPermisos.vue'
+import Docentes from '@/components/Ensenanza/Docentes.vue'
 import Materias from '@/components/Ensenanza/Materias.vue'
-import Usuarios from '../components/Admin/Usuarios.vue'
-import InvestigacionView from '../views/InvestigacionView.vue'
-import investigacionReportes from '@/components/Investigacion/Reportes/investigacionReportes.vue'
+import Usuarios from '@/components/Admin/Usuarios.vue'
+import InvestigacionView from '@/views/InvestigacionView.vue'
 import RegistroActividad from '@/components/Admin/RegistroActividad.vue'
 import Asignar from '@/components/Ensenanza/Asignar.vue'
 import Actividades from '@/components/Ensenanza/Actividades.vue'
 import Tutoria from '@/views/Tutoria.vue'
 import Secretaria from '@/views/Secretaria.vue'
+import DocentesSecretaria from '@/components/Secretaria/Docentes.vue'
 
 const routes = [
   {
@@ -65,15 +65,6 @@ const routes = [
         }
       },
       {
-        path: '/reportes',
-        name: 'InvestigacionReportes',
-        component: investigacionReportes,
-        meta: {
-          title: 'Reportes de Investigacion',
-          requiredPermission: 'Investigacion'
-        }
-      },
-      {
         path: '/materias',
         name: 'Materias',
         component: Materias,
@@ -111,6 +102,12 @@ const routes = [
         name: 'Secretaria',
         component: Secretaria,
         meta: { title: 'Secretaria Academica' }
+      },
+      {
+        path: '/docentes-secretaria',
+        name: 'DocentesSecretaria',
+        component: DocentesSecretaria,
+        meta: { title: 'Docentes', requiredPermission: 'Secretaria' }
       }
     ]
   },

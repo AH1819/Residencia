@@ -14,13 +14,12 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const fileExtension = file.originalname.split(".").pop();
-    const actividadId = req.body.idSecretaria;
+    const actividadId = req.body.idUsuario;
     const currentDate = new Date().toISOString().slice(0, 10);
-    const uuidv4 = require("uuid").v4; // Asegúrate de instalar la librería UUID si no la tienes
 
     cb(
       null,
-      `Evi-Sec-${actividadId}-${currentDate}-${uuidv4()}.${fileExtension}`
+      `Evi-Sec-${actividadId}-${currentDate}.${fileExtension}`
     );
   },
 });
@@ -47,6 +46,7 @@ function insertarDocente(req, res) {
 
   secretariaModel.insertarDocente(formData, (error, resultado) => {
     if (error) {
+      console.log("Error al insertar en la base de datos:", error);
       res.status(500).json({ error: "Error al insertar la actividad." });
     } else {
       res.json(resultado);
@@ -55,7 +55,6 @@ function insertarDocente(req, res) {
 }
 
 function editarDocente(req, res) {
-
   const id = req.body.idSecretaria;
   const formData = {
     rfc: req.body.rfc,
@@ -86,7 +85,6 @@ function eliminarDocente(req, res) {
 }
 
 function getTipo(req, res) {
-
   secretariaModel.getTipo((error, rows) => {
     if (error) {
       res.status(500).json({ error: "Error al obtener el data." });
@@ -108,18 +106,21 @@ function obtenerDocumentos(req, res) {
 }
 
 function insertarDocumentos(req, res) {
+  console.log("Insertar Documento");
+  console.log(req.params);
   upload(req, res, function (err) {
     if (err) {
+      console.log("Error al subir el archivo:", err);
       return res.status(500).json({ error: err.message });
     }
     const { originalname, filename } = req.file;
 
     const urlArchivo = "/public/evidenciasSecretaria/" + filename;
 
-    const { idSecretaria, nombreDoc, fecha,idTipoDocumento } = req.body;
+    const { idUsuario, nombreDoc, fecha, idTipoDocumento } = req.body;
 
     const data = {
-      idSecretaria: idSecretaria,
+      idUsuario: idUsuario,
       idTipoDocumento: idTipoDocumento,
       urlDocumento: urlArchivo,
       fecha,
@@ -137,10 +138,11 @@ function insertarDocumentos(req, res) {
 const actualizarDocumentos = (req, res) => {
   upload(req, res, (err) => {
     if (err) {
+      console.log("Error al subir el archivo:", err);
       return res.status(500).json({ error: err.message });
     }
 
-    const { idDocumento, nombreDoc, fecha,idTipoDocumento } = req.body;
+    const { idDocumento, nombreDoc, fecha, idTipoDocumento } = req.body;
 
     const data = {
       idTipoDocumento: idTipoDocumento,
@@ -246,9 +248,6 @@ function eliminarDocumentos(req, res) {
   });
 }
 
-
-
-
 module.exports = {
   showAll,
   insertarDocente,
@@ -259,6 +258,5 @@ module.exports = {
   obtenerDocumentos,
   insertarDocumentos,
   actualizarDocumentos,
-  eliminarDocumentos
-
+  eliminarDocumentos,
 };

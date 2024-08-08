@@ -8,7 +8,11 @@
     >
       <span class="pi pi-sitemap mr-2"></span>Asignar Materia
     </button>
-    <TableModel :data="dataDetalleDocente" :columns="columns" :title="'Reporte de actividades PAT'">
+    <TableModel 
+    :data="dataDetalleDocente" 
+    :columns="columns" 
+    :titleProp="'Reporte de Materias Asignadas'" 
+    :seccionProp="'COOR. DE INGENIERÍA EN DESARROLLO Y TECNOLOGÍAS DE SOFTWARE'">
       <template #headers>
         <th>ID</th>
         <th>Docente</th>
@@ -50,13 +54,12 @@
         <div class="py-1 max-h-96 overflow-y-auto">
           <form @submit.prevent="submitForm" id="form-asig">
             <div class="w-full px-3 mb-4">
-              <label
-                class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+              <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                 >Docente</label
               >
               <select
                 v-model="form.docente"
-                class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="" disabled selected>Selecciona un docente</option>
                 <option v-for="docente in docentes" :key="docente.rfc" :value="docente.rfc">
@@ -65,13 +68,12 @@
               </select>
             </div>
             <div class="w-full px-3 mb-4">
-              <label
-                class="block uppercase tracking-wide text-gray-900 dark:text-white text-xs font-bold mt-2 mb-2"
+              <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
                 >Materia</label
               >
               <select
                 v-model="form.materias"
-                class="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="" disabled selected>Selecciona una materia</option>
                 <option

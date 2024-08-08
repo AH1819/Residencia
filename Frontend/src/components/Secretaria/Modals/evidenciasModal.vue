@@ -259,7 +259,7 @@ export default {
       }
     },
     submitForm() {
-      const formData = new FormData();
+      const formData = new FormData(); 
       formData.append("idDocumento", this.form.idDocumento);
       formData.append("idSecretaria", this.form.idSecretaria);
       formData.append("nombreDoc", this.form.nombreDoc);

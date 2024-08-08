@@ -431,19 +431,26 @@ function obtenerDocentes(req, res) {
 
 function insertarDocente(req, res) {
   const formData = async () => {
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-
-    return {
+    let data = {
       rfc: req.body.rfc,
       n_plaza: req.body.n_plaza,
-      password: hashedPassword,
       nombre_Doce: req.body.nombre_Doce,
       apellido_paterno: req.body.apellido_paterno,
       apellido_materno: req.body.apellido_materno,
       sexo: req.body.sexo,
-      status: 1,
+      email: req.body.email,
+      status: 0,
     };
+
+    if (req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      data.password = hashedPassword;
+      data.status = 1;
+    }
+
+    return data;
   };
+
   formData()
     .then((data) => {
       EnsenanzaModel.insertarDocente(data, (error, resultado) => {
@@ -478,6 +485,7 @@ function editarDocente(req, res) {
       apellido_paterno: req.body.apellido_paterno,
       apellido_materno: req.body.apellido_materno,
       sexo: req.body.sexo,
+      email: req.body.email,
     };
     if (hashedPassword) {
       formData.password = hashedPassword;

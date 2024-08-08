@@ -12,7 +12,7 @@
       :data="dataDocentes"
       :columns="columnas"
       :titleProp="'Reporte de Registro Docente'"
-      :seccionProp="'COOR. DE INGENIERÍA EN DESARROLLO Y TECNOLOGÍAS DE SOFTWARE'"
+      :seccionProp="'SECRETARÍA ACADÉMICA'"
     >
       <template #headers>
         <th>RFC</th>
@@ -21,7 +21,6 @@
         <th>Apellido Materno</th>
         <th>N_Plaza</th>
         <th>Correo</th>
-        <th>Status</th>
         <th></th>
       </template>
     </TableModel>
@@ -92,27 +91,6 @@
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Ej. E036"
               />
-            </div>
-            <div class="w-full px-3 md:mb-4">
-              <label
-                class="block text-gray-700 dark:text-white text-sm font-bold mb-2"
-                for="password"
-              >
-                Password
-              </label>
-              <div class="flex items-center">
-                <input
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
-                  v-model="form.password"
-                  :type="show ? 'password' : 'text'"
-                  placeholder="Debe tener al menos 6 caracteres"
-                  autocomplete="current-password webauthn"
-                />
-                <span class="py-2 px-2 cursor-pointer dark:text-white" @click="show = !show"
-                  ><i :class="show ? 'pi pi-eye' : 'pi pi-eye-slash'" style="font-size: 1.5rem"></i
-                ></span>
-              </div>
             </div>
             <div class="w-full px-3 md:mb-4">
               <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2">
@@ -231,7 +209,6 @@ export default {
       form: {
         rfc: '',
         n_plaza: '',
-        password: '',
         nombre_Doce: '',
         apellido_paterno: '',
         apellido_materno: '',
@@ -247,15 +224,6 @@ export default {
         { data: 'n_plaza' },
         { data: 'email' },
         {
-          title: 'Status',
-          data: null,
-          render: (data) => {
-            return data.status === 1
-              ? `<div class="w-full flex items-center justify-center"><button class="btn-status-doce inline-flex items-center rounded-md bg-green-500 px-2 py-2 text-xs font-medium text-white ring-1 ring-inset ring-green-600/10" data-id="${data.rfc}"><i class="pi pi-sync mr-2"></i>Activo</button></div>`
-              : `<div class="w-full flex items-center justify-center"><button class="btn-status-doce inline-flex items-center rounded-md bg-red-500 px-2 py-2 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10" data-id="${data.rfc}"><i class="pi pi-sync mr-2"></i>Inactivo</button></div>`
-          }
-        },
-        {
           title: 'Acciones',
           data: null,
           render: (data) => {
@@ -270,7 +238,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('setSelectedOption', 'Enseñanza - Agregar Docente')
+    this.$store.dispatch('setSelectedOption', 'Secretaria - Agregar Docente')
     this.obtenerData()
     document.addEventListener('click', this.handleClick)
   },
@@ -321,7 +289,6 @@ export default {
         this.form.editRFC = docentes.rfc
         this.form.rfc = docentes.rfc
         this.form.n_plaza = docentes.n_plaza
-        this.form.password = ''
         this.form.nombre_Doce = docentes.nombre_Doce
         this.form.apellido_paterno = docentes.apellido_paterno
         this.form.apellido_materno = docentes.apellido_materno
@@ -355,7 +322,6 @@ export default {
         editRFC: this.form.editRFC,
         rfc: this.form.rfc.toUpperCase(),
         n_plaza: this.form.n_plaza,
-        password: this.form.password,
         nombre_Doce: this.form.nombre_Doce,
         apellido_paterno: this.form.apellido_paterno,
         apellido_materno: this.form.apellido_materno,
@@ -368,14 +334,6 @@ export default {
       if (this.form.editRFC) {
         promise = apiEnsenanza.actualizarDocente(this.form.editRFC, data)
       } else {
-        if (this.form.password.length < 6) {
-          Swal.fire({
-            title: 'Contraseña corta',
-            text: 'La contraseña debe tener al menos 6 caracteres',
-            icon: 'warning'
-          })
-          return
-        }
         const validrfc = this.dataDocentes.find((item) => item.rfc == this.form.rfc)
         if (validrfc) {
           Swal.fire({
@@ -448,7 +406,6 @@ export default {
       this.form.editRFC = ''
       this.form.rfc = ''
       this.form.n_plaza = ''
-      this.form.password = ''
       this.form.nombre_Doce = ''
       this.form.apellido_paterno = ''
       this.form.apellido_materno = ''
